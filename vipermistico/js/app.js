@@ -34,11 +34,29 @@
   const $sharedWhatsappBtn = document.getElementById('sharedWhatsappBtn');
   const $sharedBrowseBtn = document.getElementById('sharedBrowseBtn');
   const $hero = document.getElementById('hero');
+  const $lightbox = document.getElementById('lightbox');
+  const $lightboxImg = document.getElementById('lightboxImg');
+  const $lightboxName = document.getElementById('lightboxName');
+  const $lightboxClose = document.getElementById('lightboxClose');
+  const $lightboxBody = document.getElementById('lightboxBody');
+  const $sizeSheet = document.getElementById('sizeSheet');
+  const $sizeSheetOverlay = document.getElementById('sizeSheetOverlay');
+  const $sizeSheetClose = document.getElementById('sizeSheetClose');
+  const $sizeSheetImg = document.getElementById('sizeSheetImg');
+  const $sizeSheetName = document.getElementById('sizeSheetName');
+  const $sizeSheetBrand = document.getElementById('sizeSheetBrand');
+  const $sizeGrid = document.getElementById('sizeGrid');
+  const $sizeSheetConfirm = document.getElementById('sizeSheetConfirm');
+
+  // --- Available sizes (MX) ---
+  var SIZES = [22, 22.5, 23, 23.5, 24, 24.5, 25, 25.5, 26, 26.5, 27, 27.5, 28, 28.5, 29, 29.5, 30];
 
   // --- State ---
   let cart = [];
   let activeFilter = 'Todos';
   let toastTimeout = null;
+  let pendingProductId = null;
+  let selectedSize = null;
 
   // --- Helpers ---
   function getProduct(id) {
@@ -159,24 +177,116 @@
   }
 
   function handleProductClick(e) {
+    // Add to cart button
     var btn = e.target.closest('.btn-add-cart');
+    if (btn) {
+      var id = parseInt(btn.dataset.id, 10);
+      openSizeSheet(id);
+      return;
+    }
+
+    // Image click -> lightbox
+    var imgArea = e.target.closest('.product-image');
+    if (imgArea) {
+      var card = imgArea.closest('.product-card');
+      if (card) {
+        var productId = parseInt(card.dataset.id, 10);
+        openLightbox(productId);
+      }
+    }
+  }
+
+  // ============================================
+  // LIGHTBOX
+  // ============================================
+  function openLightbox(productId) {
+    var product = getProduct(productId);
+    if (!product) return;
+
+    $lightboxImg.src = product.image;
+    $lightboxImg.alt = product.name;
+    $lightboxName.textContent = product.name;
+
+    $lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    $lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ============================================
+  // SIZE SELECTOR SHEET
+  // ============================================
+  function openSizeSheet(productId) {
+    var product = getProduct(productId);
+    if (!product) return;
+
+    pendingProductId = productId;
+    selectedSize = null;
+
+    $sizeSheetImg.src = product.image;
+    $sizeSheetImg.alt = product.name;
+    $sizeSheetName.textContent = product.name;
+    $sizeSheetBrand.textContent = product.brand;
+
+    $sizeGrid.innerHTML = SIZES.map(function (size) {
+      return '<button class="size-btn" data-size="' + size + '">' + size + '</button>';
+    }).join('');
+
+    $sizeSheetConfirm.disabled = true;
+    $sizeSheetConfirm.classList.remove('ready');
+    $sizeSheetConfirm.innerHTML = '<i class="fa-solid fa-ruler" aria-hidden="true"></i> SELECCIONA UNA TALLA';
+
+    $sizeSheet.classList.add('open');
+    $sizeSheetOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSizeSheet() {
+    $sizeSheet.classList.remove('open');
+    $sizeSheetOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    pendingProductId = null;
+    selectedSize = null;
+  }
+
+  function handleSizeSelect(e) {
+    var btn = e.target.closest('.size-btn');
     if (!btn) return;
 
-    var id = parseInt(btn.dataset.id, 10);
-    addToCart(id);
+    // Deselect previous
+    var prev = $sizeGrid.querySelector('.size-btn.selected');
+    if (prev) prev.classList.remove('selected');
+
+    // Select new
+    btn.classList.add('selected');
+    selectedSize = parseFloat(btn.dataset.size);
+
+    // Enable confirm button
+    $sizeSheetConfirm.disabled = false;
+    $sizeSheetConfirm.classList.add('ready');
+    $sizeSheetConfirm.innerHTML = '<i class="fa-solid fa-cart-plus" aria-hidden="true"></i> AGREGAR TALLA ' + selectedSize;
+  }
+
+  function handleSizeConfirm() {
+    if (!pendingProductId || !selectedSize) return;
+    addToCart(pendingProductId, selectedSize);
+    closeSizeSheet();
   }
 
   // ============================================
   // CART OPERATIONS
   // ============================================
-  function addToCart(productId) {
-    var existing = cart.find(function (item) { return item.productId === productId; });
+  function addToCart(productId, size) {
+    var existing = cart.find(function (item) { return item.productId === productId && item.size === size; });
     if (existing) {
       if (existing.quantity < 10) {
         existing.quantity++;
       }
     } else {
-      cart.push({ productId: productId, quantity: 1 });
+      cart.push({ productId: productId, size: size, quantity: 1 });
     }
     saveCart();
     updateBadge();
@@ -264,7 +374,7 @@
         '</div>' +
         '<div class="cart-item-details">' +
           '<p class="cart-item-name">' + product.name + '</p>' +
-          '<span class="cart-item-brand">' + product.brand + '</span>' +
+          '<span class="cart-item-brand">' + product.brand + ' &middot; Talla ' + item.size + '</span>' +
           '<div class="cart-item-controls">' +
             '<button class="qty-btn" data-action="decrease" data-index="' + index + '" aria-label="Disminuir cantidad">' +
               '<i class="fa-solid fa-minus"></i>' +
@@ -298,7 +408,7 @@
   // ============================================
   function generateShareLink() {
     var cartData = cart.map(function (item) {
-      return [item.productId, item.quantity];
+      return [item.productId, item.size, item.quantity];
     });
     var json = JSON.stringify(cartData);
     var encoded = btoa(unescape(encodeURIComponent(json)));
@@ -315,7 +425,7 @@
       // Validate structure
       if (!Array.isArray(data)) return null;
       return data.map(function (entry) {
-        return { productId: entry[0], quantity: entry[1] || 1 };
+        return { productId: entry[0], size: entry[1], quantity: entry[2] || 1 };
       });
     } catch (e) {
       return null;
@@ -326,7 +436,7 @@
     var lines = items.map(function (item) {
       var product = getProduct(item.productId);
       if (!product) return null;
-      return '- ' + product.name + ' (x' + item.quantity + ')';
+      return '- ' + product.name + ' | Talla: ' + (item.size || 'N/A') + ' | x' + item.quantity;
     }).filter(Boolean);
     return lines.join('\n');
   }
@@ -391,7 +501,7 @@
         '<img src="' + product.image + '" alt="' + product.name + '" width="64" height="64">' +
         '<div class="shared-cart-item-info">' +
           '<p class="shared-cart-item-name">' + product.name + '</p>' +
-          '<span class="shared-cart-item-brand">' + product.brand + '</span>' +
+          '<span class="shared-cart-item-brand">' + product.brand + ' &middot; Talla ' + (item.size || 'N/A') + '</span>' +
         '</div>' +
         '<span class="shared-cart-item-qty">x' + item.quantity + '</span>' +
       '</div>';
@@ -439,6 +549,18 @@
     // Cart item actions (event delegation)
     $cartItems.addEventListener('click', handleCartItemAction);
 
+    // Lightbox
+    $lightboxClose.addEventListener('click', closeLightbox);
+    $lightbox.addEventListener('click', function (e) {
+      if (e.target === $lightbox || e.target === $lightboxBody) closeLightbox();
+    });
+
+    // Size sheet
+    $sizeGrid.addEventListener('click', handleSizeSelect);
+    $sizeSheetConfirm.addEventListener('click', handleSizeConfirm);
+    $sizeSheetClose.addEventListener('click', closeSizeSheet);
+    $sizeSheetOverlay.addEventListener('click', closeSizeSheet);
+
     // Cart actions
     $shareCartBtn.addEventListener('click', openShareModal);
     $clearCartBtn.addEventListener('click', function () {
@@ -461,7 +583,11 @@
     // Keyboard: Escape closes panels
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        if ($shareModalOverlay.classList.contains('open')) {
+        if ($lightbox.classList.contains('open')) {
+          closeLightbox();
+        } else if ($sizeSheet.classList.contains('open')) {
+          closeSizeSheet();
+        } else if ($shareModalOverlay.classList.contains('open')) {
           closeShareModal();
         } else if ($cartPanel.classList.contains('open')) {
           closeCart();
