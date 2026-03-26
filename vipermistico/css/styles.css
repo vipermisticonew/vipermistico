@@ -1063,6 +1063,307 @@ body::before {
 }
 
 /* ============================================
+   IMAGE LIGHTBOX
+   ============================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+  cursor: zoom-out;
+  overscroll-behavior: contain;
+}
+
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.2rem;
+  z-index: 2;
+  transition: background var(--transition-fast);
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-body {
+  max-width: min(90vw, 700px);
+  max-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-body img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  transform: scale(0.92);
+  transition: transform var(--transition-base);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.lightbox.open .lightbox-body img {
+  transform: scale(1);
+}
+
+.lightbox-name {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  letter-spacing: 0.5px;
+  max-width: 400px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+}
+
+.lightbox.open .lightbox-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Make product images clickable */
+.product-image {
+  cursor: zoom-in;
+}
+
+/* ============================================
+   SIZE SELECTOR BOTTOM SHEET
+   ============================================ */
+.size-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.size-sheet-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.size-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 251;
+  background: var(--surface);
+  border-top: 1px solid var(--border-light);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 0.75rem 1.5rem 2rem;
+  transform: translateY(100%);
+  transition: transform var(--transition-base);
+  max-height: 85vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.size-sheet.open {
+  transform: translateY(0);
+}
+
+.size-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+}
+
+.size-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.size-sheet-product {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.size-sheet-product img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.size-sheet-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.size-sheet-brand {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.size-sheet-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.size-sheet-close:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.size-sheet-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.size-btn {
+  padding: 0.7rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.size-btn:hover {
+  border-color: var(--border-light);
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.size-btn.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 77, 0, 0.08);
+  box-shadow: 0 0 12px rgba(255, 77, 0, 0.1);
+}
+
+.size-sheet-confirm {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base);
+  cursor: not-allowed;
+}
+
+.size-sheet-confirm.ready {
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.size-sheet-confirm.ready:hover {
+  background: var(--accent-soft);
+  box-shadow: 0 6px 24px var(--accent-glow-strong);
+}
+
+@media (min-width: 640px) {
+  .size-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .size-sheet-name {
+    max-width: 320px;
+  }
+}
+
+@media (min-width: 768px) {
+  .size-sheet {
+    left: 50%;
+    right: auto;
+    bottom: 50%;
+    transform: translate(-50%, 50%) scale(0.95);
+    border-radius: var(--radius-lg);
+    max-width: 440px;
+    width: 100%;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-elevated);
+    max-height: 80vh;
+  }
+  .size-sheet.open {
+    transform: translate(-50%, 50%) scale(1);
+  }
+  .size-sheet-handle {
+    display: none;
+  }
+  .size-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ============================================
    TOAST NOTIFICATION
    ============================================ */
 .toast {
