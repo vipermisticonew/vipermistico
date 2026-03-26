@@ -400,7 +400,7 @@
     // WhatsApp button for shared cart
     var summary = buildCartSummaryText(items);
     var totalItems = items.reduce(function (s, i) { return s + i.quantity; }, 0);
-    var message = 'Hola! Un cliente te compartio su carrito de VIPERMISTICO (' + totalItems + ' art\u00edculos):\n\n' + summary;
+    var message = 'Hola! Un cliente te compartio su carrito de VIPERMISTICO (' + totalItems + ' art\u00edculos):\n\n' + summary + '\n\n' + window.location.href;
     $sharedWhatsappBtn.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
 
     $sharedBrowseBtn.addEventListener('click', function () {
