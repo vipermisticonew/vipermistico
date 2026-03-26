@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VIPERMISTICO | Sneakers Originales</title>
-  <meta name="description" content="VIPERMISTICO - Tu tienda de sneakers originales. Nike, Jordan, On Running, Veja, New Balance y mas. Arma tu carrito y comparte tu pedido por WhatsApp.">
+  <meta name="description" content="VIPERMISTICO - Tu tienda de sneakers . Nike, Jordan, On Running, Veja, New Balance y mas. Arma tu carrito y comparte tu pedido por WhatsApp.">
   <meta name="theme-color" content="#0a0a0a">
 
   <!-- Open Graph -->
@@ -141,6 +141,40 @@
       </button>
       <p class="share-modal-hint">Comparte este enlace para que vean tu seleccion de productos.</p>
     </div>
+  </div>
+
+  <!-- ===== IMAGE LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Vista ampliada">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar imagen">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <div class="lightbox-body" id="lightboxBody">
+      <img id="lightboxImg" src="" alt="" draggable="false">
+    </div>
+    <p class="lightbox-name" id="lightboxName"></p>
+  </div>
+
+  <!-- ===== SIZE SELECTOR BOTTOM SHEET ===== -->
+  <div class="size-sheet-overlay" id="sizeSheetOverlay"></div>
+  <div class="size-sheet" id="sizeSheet" role="dialog" aria-label="Seleccionar talla">
+    <div class="size-sheet-handle"></div>
+    <div class="size-sheet-header">
+      <div class="size-sheet-product" id="sizeSheetProduct">
+        <img id="sizeSheetImg" src="" alt="" width="56" height="56">
+        <div>
+          <p class="size-sheet-name" id="sizeSheetName"></p>
+          <span class="size-sheet-brand" id="sizeSheetBrand"></span>
+        </div>
+      </div>
+      <button class="size-sheet-close" id="sizeSheetClose" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="size-sheet-label">Selecciona tu talla (MX)</p>
+    <div class="size-grid" id="sizeGrid"></div>
+    <button class="size-sheet-confirm" id="sizeSheetConfirm" disabled>
+      <i class="fa-solid fa-cart-plus" aria-hidden="true"></i> SELECCIONA UNA TALLA
+    </button>
   </div>
 
   <!-- ===== TOAST ===== -->
