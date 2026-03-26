@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" style="color-scheme: dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIPERMISTICO | Sneakers Originales</title>
+  <meta name="description" content="VIPERMISTICO - Tu tienda de sneakers originales. Nike, Jordan, On Running, Veja, New Balance y mas. Arma tu carrito y comparte tu pedido por WhatsApp.">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="VIPERMISTICO | Sneakers Originales">
+  <meta property="og:description" content="Tu tienda de sneakers originales. Arma tu carrito y comparte tu pedido.">
+  <meta property="og:image" content="images/logo.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Preconnect CDN -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a href="#catalog" class="sr-only" style="position:fixed;top:0;left:0;z-index:9999;padding:1rem;background:var(--accent);color:#fff;">Ir al catalogo</a>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" role="navigation" aria-label="Navegacion principal">
+    <a href="#" class="nav-logo" aria-label="Inicio">
+      <img src="images/logox.jpg" alt="VIPERMISTICO" width="120" height="36">
+      <span class="nav-brand">VIPERMISTICO</span>
+    </a>
+    <button class="nav-cart-btn" id="cartToggle" aria-label="Abrir carrito">
+      <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </nav>
+
+  <!-- ===== SHARED CART BANNER (shown when URL has #cart=) ===== -->
+  <section class="shared-cart-banner" id="sharedCartBanner" aria-label="Carrito compartido">
+    <div class="shared-cart-inner">
+      <div class="shared-cart-header">
+        <i class="fa-solid fa-link" aria-hidden="true"></i>
+        <h2>Carrito Compartido</h2>
+      </div>
+      <div class="shared-cart-items" id="sharedCartItems"></div>
+      <div class="shared-cart-actions">
+        <a href="#" class="btn-shared-whatsapp" id="sharedWhatsappBtn">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Contactar por WhatsApp
+        </a>
+        <button class="btn-shared-browse" id="sharedBrowseBtn">
+          <i class="fa-solid fa-store" aria-hidden="true"></i> Ver Catalogo Completo
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <img src="images/logo.jpg" alt="VIPERMISTICO" class="hero-logo" width="420" height="210">
+      <h1 class="hero-tagline">
+        TU ESTILO<span class="accent">TU JUEGO</span>
+      </h1>
+      <p class="hero-subtitle">Sneakers originales al mejor precio. Arma tu carrito y compartelo.</p>
+      <a href="#catalog" class="hero-cta">
+        VER CATALOGO <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FILTER BAR ===== -->
+  <section class="filters" id="filters" aria-label="Filtrar por marca">
+    <div class="filters-scroll" id="filtersScroll" role="tablist">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- ===== PRODUCT CATALOG ===== -->
+  <section class="catalog" id="catalog">
+    <div class="catalog-header">
+      <h2 class="catalog-title" id="catalogTitle">TODOS LOS MODELOS</h2>
+      <span class="catalog-count" id="catalogCount"></span>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- ===== CART OVERLAY ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <!-- ===== CART PANEL ===== -->
+  <aside class="cart-panel" id="cartPanel" aria-label="Carrito de compras">
+    <div class="cart-panel-header">
+      <h2 class="cart-panel-title"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> TU CARRITO</h2>
+      <button class="cart-close-btn" id="cartClose" aria-label="Cerrar carrito">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <!-- Rendered by JS -->
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display: none;">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Articulos en carrito</span>
+        <span class="cart-total-count" id="cartTotalCount">0</span>
+      </div>
+      <button class="btn-share-cart" id="shareCartBtn">
+        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> COMPARTIR CARRITO
+      </button>
+      <button class="btn-clear-cart" id="clearCartBtn">Vaciar carrito</button>
+    </div>
+  </aside>
+
+  <!-- ===== SHARE MODAL ===== -->
+  <div class="share-modal-overlay" id="shareModalOverlay">
+    <div class="share-modal" role="dialog" aria-label="Compartir carrito">
+      <div class="share-modal-header">
+        <h3 class="share-modal-title"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> COMPARTIR</h3>
+        <button class="share-modal-close" id="shareModalClose" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="share-url-group">
+        <input type="text" class="share-url-input" id="shareUrlInput" readonly aria-label="Enlace para compartir">
+        <button class="btn-copy" id="copyLinkBtn">
+          <i class="fa-regular fa-copy" aria-hidden="true"></i> Copiar
+        </button>
+      </div>
+      <button class="btn-share-whatsapp" id="shareWhatsappBtn">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Enviar por WhatsApp
+      </button>
+      <p class="share-modal-hint">Comparte este enlace para que vean tu seleccion de productos.</p>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+    <span id="toastMessage">Agregado al carrito</span>
+  </div>
+
+  <!-- ===== WHATSAPP FLOAT ===== -->
+  <a href="https://wa.me/525573261383" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contactar por WhatsApp">
+    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+  </a>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <img src="images/logox.jpg" alt="VIPERMISTICO" class="footer-logo" width="160" height="48">
+    <p class="footer-text">
+      Sneakers originales de las mejores marcas.<br>
+      Envios a toda la republica mexicana.<br>
+      Contactanos por WhatsApp para mas informacion.
+    </p>
+    <div class="footer-social">
+      <a href="https://wa.me/525573261383" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      </a>
+      <a href="#" aria-label="Instagram">
+        <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">&copy; 2026 VIPERMISTICO. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
